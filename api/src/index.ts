@@ -6,7 +6,7 @@ import connectDB from "./db";
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3005;
 
 const dbHost = process.env.DB_HOST || "localhost";
 const dbPort = process.env.DB_PORT || "27017";
