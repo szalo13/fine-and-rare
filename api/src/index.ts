@@ -2,17 +2,14 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import connectDB from "./db";
+import { DB_HOST, DB_NAME, DB_PORT } from "./const";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3005;
 
-const dbHost = process.env.DB_HOST || "localhost";
-const dbPort = process.env.DB_PORT || "27017";
-const dbName = process.env.DB_NAME || "find-and-rare";
-
-connectDB(dbHost, dbPort, dbName);
+connectDB(DB_HOST, DB_PORT, DB_NAME);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
