@@ -23,6 +23,13 @@ input CreateProductInput {
   producerId: String!
 }
 
+input UpdateProductInput {
+  vintage: String
+  name: String
+  producerId: String
+}
+
 type Mutation {
-  createProducts(productsInput: [CreateProductInput!]!): [Product!]!
+  createProducts(input: [CreateProductInput!]!): [Product!]!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
 }

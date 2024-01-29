@@ -11,7 +11,12 @@ interface IProductsByProducerIdQuery {
 }
 
 interface ICreateProductsMutation {
-  productsInput: INewProductInput[];
+  input: INewProductInput[];
+}
+
+interface IProductUpdateMutation {
+  id: string;
+  input: IProduct;
 }
 
 export const productResolvers = {
@@ -35,11 +40,12 @@ export const productResolvers = {
     },
   },
   Mutation: {
-    createProducts: async (
-      _: any,
-      { productsInput }: ICreateProductsMutation
-    ) => {
-      return await ProductService.createMany(productsInput);
+    createProducts: async (_: any, { input }: ICreateProductsMutation) => {
+      return await ProductService.createMany(input);
+    },
+    updateProduct: async (_: any, { id, input }: IProductUpdateMutation) => {
+      console.log(id, input);
+      return await ProductService.updateProduct(id, input);
     },
   },
 };

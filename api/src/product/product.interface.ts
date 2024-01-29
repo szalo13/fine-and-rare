@@ -11,3 +11,9 @@ export interface INewProductInput {
   name: string;
   producerId: string;
 }
+
+export interface IProductUpdate {
+  vintage?: string;
+  name?: string;
+  producerId?: string;
+}
