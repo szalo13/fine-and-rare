@@ -1,6 +1,6 @@
-import ProductModel from "./Product.model";
-import ProducerModel from "./producer/Producer.model";
+import { ProducerService } from "./producer/producer.service";
 import { IProduct } from "./product.interface";
+import { ProductService } from "./product.service";
 
 interface IProductByIdQuery {
   id: string;
@@ -16,18 +16,18 @@ export const productResolvers = {
       return product.producerId._id.toString();
     },
     producer: async (product: IProduct) => {
-      return await ProducerModel.findById(product.producerId);
+      return await ProducerService.getById(product.producerId);
     },
   },
   Query: {
     productById: async (_: any, { id }: IProductByIdQuery) => {
-      return await ProductModel.findById(id);
+      return await ProductService.getById(id);
     },
     productsByProducerId: async (
       _: any,
       { producerId }: IProductsByProducerIdQuery
     ) => {
-      return await ProductModel.find({ producerId });
+      return await ProductService.getByProducerId(producerId);
     },
   },
 };
