@@ -1,0 +1,11 @@
+type Product {
+  id: ID!
+  vintage: String!
+  name: String!
+  producerId: ID!
+  producer: Producer
+}
+
+type Query {
+  productById(id: ID!): Product
+}

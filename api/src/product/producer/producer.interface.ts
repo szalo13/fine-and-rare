@@ -5,3 +5,9 @@ export interface IProducer extends Document {
   country?: string;
   region?: string;
 }
+
+export interface INewProducerInput {
+  name: string;
+  country?: string;
+  region?: string;
+}
