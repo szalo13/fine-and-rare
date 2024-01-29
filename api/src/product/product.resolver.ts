@@ -44,7 +44,6 @@ export const productResolvers = {
       return await ProductService.createMany(input);
     },
     updateProduct: async (_: any, { id, input }: IProductUpdateMutation) => {
-      console.log(id, input);
       return await ProductService.updateProduct(id, input);
     },
   },

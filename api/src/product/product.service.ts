@@ -1,6 +1,12 @@
 import ProductModel from "./Product.model";
 import { INewProductInput, IProductUpdate } from "./product.interface";
 
+const updateFields = (entity: any, input: any) => {
+  Object.keys(input).forEach((key) => {
+    entity[key] = input[key];
+  });
+};
+
 export class ProductService {
   static async getById(id: string) {
     return await ProductModel.findById(id);
@@ -15,6 +21,11 @@ export class ProductService {
   }
 
   static async updateProduct(id: string, input: IProductUpdate) {
-    return ProductModel.findOneAndUpdate({ _id: id }, input);
+    const product = await ProductModel.findById(id);
+    if (!product) throw new Error("Product not found");
+
+    updateFields(product, input);
+    await product.validate();
+    return await product.save();
   }
 }
