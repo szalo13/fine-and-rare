@@ -22,7 +22,7 @@ export class ProductService {
 
   static async createMany(
     products: INewProductInput[],
-    opts: IBulkCreateOptions = { ordered: false }
+    opts: IBulkCreateOptions = { ordered: true }
   ) {
     return await ProductModel.insertMany(products, opts);
   }

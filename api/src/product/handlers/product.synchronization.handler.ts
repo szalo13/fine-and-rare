@@ -66,7 +66,7 @@ export const ProductSynchronizationHandler = () => {
         }
       }
 
-      await ProductService.createMany(products);
+      await ProductService.createMany(products, { ordered: false });
       return true;
     } catch (error) {
       failedBatchesCount++;
@@ -89,6 +89,7 @@ export const ProductSynchronizationHandler = () => {
   };
 
   const handleEnd = async () => {
+    console.log("handle end");
     if (currentBatch.length) {
       await upsertBatch(currentBatch);
       currentBatch = [];
@@ -101,14 +102,6 @@ export const ProductSynchronizationHandler = () => {
     );
   };
 
-  /**
-   * 1. Fetches CVS as NodeJS Stream
-   * 2. Groups by Vintage + ProductName + Producer
-   * 3. Creates a new Product if not exists
-   * 4. IF stream failed, only console log results
-   * 5. IF stream succeded, console log results and exit
-   * 6. If product row has empty Producer, adding it to producer with name "Unknown"
-   */
   const synchronizeProducts = async () => {
     try {
       console.log("Synchronizing products...");
