@@ -1,5 +1,5 @@
 import { ProducerService } from "./producer/producer.service";
-import { IProduct } from "./product.interface";
+import { INewProductInput, IProduct } from "./product.interface";
 import { ProductService } from "./product.service";
 
 interface IProductByIdQuery {
@@ -8,6 +8,10 @@ interface IProductByIdQuery {
 
 interface IProductsByProducerIdQuery {
   producerId: string;
+}
+
+interface ICreateProductsMutation {
+  productsInput: INewProductInput[];
 }
 
 export const productResolvers = {
@@ -28,6 +32,14 @@ export const productResolvers = {
       { producerId }: IProductsByProducerIdQuery
     ) => {
       return await ProductService.getByProducerId(producerId);
+    },
+  },
+  Mutation: {
+    createProducts: async (
+      _: any,
+      { productsInput }: ICreateProductsMutation
+    ) => {
+      return await ProductService.createMany(productsInput);
     },
   },
 };

@@ -1,4 +1,4 @@
-import { INewProducerInput, IProducer } from "./producer/producer.interface";
+import { IProducer } from "./producer/producer.interface";
 
 export interface IProduct extends Document {
   vintage: string;
@@ -9,5 +9,5 @@ export interface IProduct extends Document {
 export interface INewProductInput {
   vintage: string;
   name: string;
-  producer: INewProducerInput;
+  producerId: string;
 }

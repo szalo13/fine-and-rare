@@ -16,3 +16,13 @@ type Query {
   productById(id: ID!): Product
   productsByProducerId(producerId: ID!): [ProductWithoutProducer]
 }
+
+input CreateProductInput {
+  vintage: String!
+  name: String!
+  producerId: String!
+}
+
+type Mutation {
+  createProducts(productsInput: [CreateProductInput!]!): [Product!]!
+}
