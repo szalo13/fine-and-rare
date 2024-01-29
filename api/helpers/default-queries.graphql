@@ -1,0 +1,47 @@
+# {
+#   productById(id: "65b657563fb665acca137edf") {
+#     id
+#     name
+#     producer {
+#       name
+#       country
+#       region
+#     }
+#   }
+#   productsByProducerId(producerId: "65b657563fb665acca137edc") {
+#     id
+#     name
+#   }
+# }
+
+# mutation CreateProducts {
+#   createProducts(input: [{vintage: "2017", name: "Chateau Margaux", producerId: "65b657563fb665acca137edc"}, {vintage: "2020", name: "Sassicaia", producerId: "65b657563fb665acca137edc"}]) {
+#     id
+#     name
+#     producerId
+#   }
+# }
+
+# mutation UpdateProduct {
+#   updateProduct(id: "65b657563fb665acca137edf", input: {
+#     name: "New name",
+#     vintage: "2018",
+#     # Other fields to update
+#   }) {
+#     id
+#     name
+#     vintage
+#   }
+# }
+
+
+# mutation DeleteProducts {
+#   deleteProducts(ids:["65b657563fb665acca137edf", "65b657563fb665acca137edd"]) {
+#     deletedCount
+#     acknowledged
+#   }
+# }
+
+# mutation SynchronizeProducts{
+#   synchronizeProducts
+# }

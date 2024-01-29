@@ -26,6 +26,7 @@ const seedDatabase = async () => {
       {}
     );
     const productsWithProducerIds = productData.map((product) => ({
+      _id: product._id,
       vintage: product.vintage,
       name: product.name,
       producerId: producerMap[product.producerName],
