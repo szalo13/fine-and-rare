@@ -7,4 +7,6 @@ const ProducerSchema = new mongoose.Schema({
   region: String,
 });
 
+ProducerSchema.index({ name: 1 }, { unique: true });
+
 export default mongoose.model<IProducer>("Producer", ProducerSchema);

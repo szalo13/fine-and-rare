@@ -7,6 +7,10 @@ const updateFields = (entity: any, input: any) => {
   });
 };
 
+interface IBulkCreateOptions {
+  ordered?: boolean;
+}
+
 export class ProductService {
   static async getById(id: string) {
     return await ProductModel.findById(id);
@@ -16,8 +20,11 @@ export class ProductService {
     return await ProductModel.find({ producerId });
   }
 
-  static async createMany(products: INewProductInput[]) {
-    return await ProductModel.insertMany(products);
+  static async createMany(
+    products: INewProductInput[],
+    opts: IBulkCreateOptions = { ordered: false }
+  ) {
+    return await ProductModel.insertMany(products, opts);
   }
 
   static async updateProduct(id: string, input: IProductUpdate) {

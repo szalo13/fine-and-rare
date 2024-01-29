@@ -1,4 +1,4 @@
-import synchronizeProducts from "./handlers/product.synchronization.handler";
+import { ProductSynchronizationHandler } from "./handlers/product.synchronization.handler";
 import { ProducerService } from "./producer/producer.service";
 import {
   ICreateProductsMutation,
@@ -41,7 +41,7 @@ export const productResolvers = {
       return await ProductService.deleteMany(ids);
     },
     synchronizeProducts: async (): Promise<true> => {
-      synchronizeProducts();
+      ProductSynchronizationHandler().synchronizeProducts();
       return true;
     },
   },

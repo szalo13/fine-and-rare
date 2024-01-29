@@ -7,4 +7,6 @@ const ProductSchema = new mongoose.Schema({
   producerId: { type: mongoose.Schema.Types.ObjectId, ref: "Producer" },
 });
 
+ProductSchema.index({ name: 1, vintage: 1, producerId: 1 }, { unique: true });
+
 export default mongoose.model<IProduct>("Product", ProductSchema);
