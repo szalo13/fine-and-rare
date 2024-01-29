@@ -1,0 +1,4 @@
+type DeleteMultipleResult {
+  acknowledged: Boolean!
+  deletedCount: Int!
+}
