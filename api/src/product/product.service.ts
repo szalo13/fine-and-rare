@@ -28,4 +28,8 @@ export class ProductService {
     await product.validate();
     return await product.save();
   }
+
+  static async deleteMany(ids: string[]) {
+    return await ProductModel.deleteMany({ _id: { $in: ids } });
+  }
 }

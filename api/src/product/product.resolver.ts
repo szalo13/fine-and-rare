@@ -19,6 +19,10 @@ interface IProductUpdateMutation {
   input: IProduct;
 }
 
+interface IDeleteProductsMutation {
+  ids: string[];
+}
+
 export const productResolvers = {
   Product: {
     producerId: (product: IProduct) => {
@@ -45,6 +49,9 @@ export const productResolvers = {
     },
     updateProduct: async (_: any, { id, input }: IProductUpdateMutation) => {
       return await ProductService.updateProduct(id, input);
+    },
+    deleteProducts: async (_: any, { ids }: IDeleteProductsMutation) => {
+      return await ProductService.deleteMany(ids);
     },
   },
 };
