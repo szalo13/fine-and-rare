@@ -6,6 +6,10 @@ interface IProductByIdQuery {
   id: string;
 }
 
+interface IProductsByProducerIdQuery {
+  producerId: string;
+}
+
 export const productResolvers = {
   Product: {
     producerId: (product: IProduct) => {
@@ -18,6 +22,12 @@ export const productResolvers = {
   Query: {
     productById: async (_: any, { id }: IProductByIdQuery) => {
       return await ProductModel.findById(id);
+    },
+    productsByProducerId: async (
+      _: any,
+      { producerId }: IProductsByProducerIdQuery
+    ) => {
+      return await ProductModel.find({ producerId });
     },
   },
 };

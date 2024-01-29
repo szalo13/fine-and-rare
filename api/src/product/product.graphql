@@ -6,6 +6,13 @@ type Product {
   producer: Producer
 }
 
+type ProductWithoutProducer {
+  id: ID!
+  vintage: String!
+  name: String!
+}
+
 type Query {
   productById(id: ID!): Product
+  productsByProducerId(producerId: ID!): [ProductWithoutProducer]
 }
