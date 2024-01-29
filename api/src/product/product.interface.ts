@@ -17,3 +17,24 @@ export interface IProductUpdate {
   name?: string;
   producerId?: string;
 }
+
+export interface IProductByIdQuery {
+  id: string;
+}
+
+export interface IProductsByProducerIdQuery {
+  producerId: string;
+}
+
+export interface ICreateProductsMutation {
+  input: INewProductInput[];
+}
+
+export interface IProductUpdateMutation {
+  id: string;
+  input: IProduct;
+}
+
+export interface IDeleteProductsMutation {
+  ids: string[];
+}

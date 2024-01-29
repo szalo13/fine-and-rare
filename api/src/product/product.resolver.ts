@@ -1,27 +1,13 @@
 import { ProducerService } from "./producer/producer.service";
-import { INewProductInput, IProduct } from "./product.interface";
+import {
+  ICreateProductsMutation,
+  IDeleteProductsMutation,
+  IProduct,
+  IProductByIdQuery,
+  IProductUpdateMutation,
+  IProductsByProducerIdQuery,
+} from "./product.interface";
 import { ProductService } from "./product.service";
-
-interface IProductByIdQuery {
-  id: string;
-}
-
-interface IProductsByProducerIdQuery {
-  producerId: string;
-}
-
-interface ICreateProductsMutation {
-  input: INewProductInput[];
-}
-
-interface IProductUpdateMutation {
-  id: string;
-  input: IProduct;
-}
-
-interface IDeleteProductsMutation {
-  ids: string[];
-}
 
 export const productResolvers = {
   Product: {
