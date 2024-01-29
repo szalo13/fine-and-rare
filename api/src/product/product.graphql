@@ -33,4 +33,5 @@ type Mutation {
   createProducts(input: [CreateProductInput!]!): [Product!]!
   updateProduct(id: ID!, input: UpdateProductInput!): Product!
   deleteProducts(ids: [ID!]!): DeleteMultipleResult!
+  synchronizeProducts: Boolean!
 }
