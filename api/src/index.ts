@@ -5,6 +5,7 @@ import connectDB from "./db";
 import { DB_HOST, DB_NAME, DB_PORT } from "./const";
 import schema from "./schema";
 import { graphqlHTTP } from "express-graphql";
+import cacheController from "express-cache-controller";
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ connectDB(DB_HOST, DB_PORT, DB_NAME);
 
 app.use(
   "/graphql",
+  cacheController({
+    maxAge: 300,
+  }),
   graphqlHTTP({
     schema: schema,
     graphiql: true, // Enable GraphiQL interface for easy testing
