@@ -9,97 +9,70 @@ export const ProductSynchronizationHandler = () => {
   const BATCH_SIZE = 100;
   const UNKNOWN_PRODUCER_NAME = "Unknown";
 
-  const producerNameToIdMap: Record<string, string> = {};
+  let producerIdCache = new Map();
 
   let currentBatch: any[] = [];
-  let batchesCount = 0;
   let failedBatchesCount = 0;
 
-  /**
-   * 1. Rerturns producer id from cache if exists
-   * 2. Gets producer by name from DB
-   * 3. If producer exists, returns its id
-   * 4. If producer does not exist, creates a new producer and returns its id
-   */
-  const getProducerIdByName = async (producerName: string): Promise<string> => {
+  const findOrCreateProducerIdAndCache = async (
+    producerName: string
+  ): Promise<string | undefined> => {
     try {
-      if (producerNameToIdMap[producerName]) {
-        return producerNameToIdMap[producerName];
-      }
+      const producer =
+        (await ProducerService.getByName(producerName)) ||
+        (await ProducerService.create({ name: producerName }));
 
-      const producer = await ProducerService.getByName(producerName);
       if (producer) {
-        producerNameToIdMap[producerName] = producer._id.toString();
-        return producer._id;
+        const producerId = producer._id.toString();
+        producerIdCache.set(producerName, producerId);
+        return producerId;
       }
-
-      const newProducer = await ProducerService.create({ name: producerName });
-      producerNameToIdMap[producerName] = newProducer._id.toString();
-      return newProducer._id.toString();
     } catch (error) {
-      console.error(`Failed to get producer id by name: ${producerName}`);
-      return "";
+      console.error(`Failed to find or create producer ${producerName}`);
     }
   };
 
-  /**
-   * 1. Creates a new product for each row
-   * 2. If any product creation fails, returns false (batch failed)
-   * Association between product and producer is made by producer name
-   */
-  const upsertBatch = async (rows: any[]): Promise<Boolean> => {
+  const upsertBatch = async (rows: any[]) => {
     try {
-      batchesCount++;
       const products: INewProductInput[] = [];
 
       for await (const row of rows) {
-        const producerId = await getProducerIdByName(
-          row.Producer || UNKNOWN_PRODUCER_NAME
-        );
+        const producerName = row.Producer || UNKNOWN_PRODUCER_NAME;
+        const producerId =
+          producerIdCache.get(producerName) ||
+          (await findOrCreateProducerIdAndCache(producerName));
 
         if (producerId) {
           products.push({
-            vintage: row.Vintage,
             name: row["Product Name"],
-            producerId,
-          } as INewProductInput);
+            vintage: row.Vintage,
+            producerId: producerId,
+          });
         }
       }
 
       await ProductService.createMany(products, { ordered: false });
-      return true;
     } catch (error) {
+      console.error(error);
       failedBatchesCount++;
-      return false;
     }
   };
 
-  const handleData = async (row: any) => {
-    let anyBatchFailed = false;
+  const onDataRead = async (row: any) => {
     currentBatch.push(row);
 
     if (currentBatch.length === BATCH_SIZE) {
-      const succeded = upsertBatch([...currentBatch]);
+      upsertBatch([...currentBatch]);
       currentBatch = [];
-
-      if (!succeded) {
-        anyBatchFailed = true;
-      }
     }
   };
 
-  const handleEnd = async () => {
-    console.log("handle end");
+  const onDataReadEnd = async () => {
     if (currentBatch.length) {
-      await upsertBatch(currentBatch);
+      await upsertBatch([...currentBatch]);
       currentBatch = [];
     }
-    console.log(
-      `Products synchronized. ${JSON.stringify({
-        batchesCount,
-        failedBatchesCount,
-      })}`
-    );
+    console.log(`Products synchronized. Failed batches: ${failedBatchesCount}`);
   };
 
   const synchronizeProducts = async () => {
@@ -108,10 +81,10 @@ export const ProductSynchronizationHandler = () => {
       const csvStream = fs.createReadStream(FILE_PATH).pipe(csv());
 
       for await (const row of csvStream) {
-        await handleData(row);
+        await onDataRead(row);
       }
 
-      await handleEnd();
+      await onDataReadEnd();
     } catch (error) {
       console.error("Products synchronized with errors");
       console.error(error);
